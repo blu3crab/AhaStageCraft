@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import com.adaptivehandyapps.ahastagecraft.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -26,7 +24,12 @@ class GalleryFragment : Fragment() {
     // TODO: consolidate image access
     var IMAGE_PICK_CODE = 1000
 
-    var imageUri: Uri? = null
+    private var _imageUri = MutableLiveData<Uri>(null)
+    //var imageUri: Uri? = null
+    val imageUri: LiveData<Uri>
+        get() = _imageUri
+
+
     lateinit var imageView: ImageView
     //val myLazyString: String by lazy { "Hello" }
 
@@ -63,17 +66,24 @@ class GalleryFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             if (data?.data != null) {
-                imageUri = data?.data
-                Log.d("SceneFragment","imageUri " + imageUri.toString())
-                Glide.with(this)
-                    .load(imageUri)
-                    .apply(
-                        RequestOptions()
-//                            .override(2048)
-                            .placeholder(R.drawable.loading_img)
-                            .error(R.drawable.ic_broken_image))
-                    .into(imageView)
+                val resultUri = data?.data
+                // if imageUri is defined
+                resultUri?.let {
+                    // retain selection
+                    _imageUri.setValue(resultUri)
+                    Log.d(TAG, "\nimageUri " + imageUri.value)
 
+                    // display selection
+                    Glide.with(this)
+                        .load(_imageUri.value)
+                        .apply(
+                            RequestOptions()
+//                            .override(2048)   // XML android:adjustViewBounds="true" provides override
+                                .placeholder(R.drawable.loading_img)
+                                .error(R.drawable.ic_broken_image)
+                        )
+                        .into(imageView)
+                }
             }
         }
     }
