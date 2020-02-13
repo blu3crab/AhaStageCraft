@@ -1,29 +1,34 @@
 package com.adaptivehandyapps.ahastagecraft
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import android.util.Log
+import android.view.Menu
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import android.view.Menu
+import com.google.android.material.snackbar.Snackbar
 
+
+@SuppressLint("ByteOrderMark")
 class MainActivity : AppCompatActivity() {
+    private val TAG = "MainActivity"
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    var IMAGE_PICK_CODE = 1000
+//    var IMAGE_PICK_CODE = 1000
     var PERMISSION_CODE_READ = 1001
     var PERMISSION_CODE_WRITE = 1002
 
@@ -51,6 +56,9 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // request permissions
+        checkPermissionForImage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -66,31 +74,53 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissionForImage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-            ) {
-                val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                val permissionCoarse = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-                requestPermissions(permission, PERMISSION_CODE_READ) // GIVE AN INTEGER VALUE FOR PERMISSION_CODE_READ LIKE 1001
-                requestPermissions(permissionCoarse, PERMISSION_CODE_WRITE) // GIVE AN INTEGER VALUE FOR PERMISSION_CODE_WRITE LIKE 1002
-            }
-//            else {
-//                pickImageFromGallery()
+//            if ((checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+//                && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+//            ) {
+//                val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+//                val permissionCoarse = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//
+//                requestPermissions(permission, PERMISSION_CODE_READ) // GIVE AN INTEGER VALUE FOR PERMISSION_CODE_READ LIKE 1001
+//                requestPermissions(permissionCoarse, PERMISSION_CODE_WRITE) // GIVE AN INTEGER VALUE FOR PERMISSION_CODE_WRITE LIKE 1002
 //            }
+            // if READ or WRITE permissions denied, request WRITE as it will bring along READ
+            if ((checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) ||
+                (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
+                Log.d(TAG, "requesting permissions...")
+                val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, PERMISSION_CODE_WRITE)
+            }
         }
     }
-//    private fun pickImageFromGallery() {
-//        val intent = Intent(Intent.ACTION_PICK)
-//        intent.type = "image/*"
-//        startActivityForResult(intent, IMAGE_PICK_CODE) // GIVE AN INTEGER VALUE FOR IMAGE_PICK_CODE LIKE 1000
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-//            // I'M GETTING THE URI OF THE IMAGE AS DATA AND SETTING IT TO THE IMAGEVIEW
-//            imageView.setImageURI(data?.data)
-//        }
-//    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        Log.d(TAG, "onRequestPermissionsResult code " + requestCode)
+        when (requestCode) {
+//            PERMISSION_CODE_READ -> if (grantResults.size > 0
+//                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+//            ) {
+//                Toast.makeText(this@MainActivity, "Read Permission Granted!", Toast.LENGTH_SHORT)
+//                    .show()
+//            } else {
+//                Toast.makeText(this@MainActivity, "Read Permission Denied!", Toast.LENGTH_SHORT)
+//                    .show()
+//                // kill app if denied
+//                this.finish()
+//            }
+            PERMISSION_CODE_WRITE -> if (grantResults.size > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(this@MainActivity, "Write Permission Granted!", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(this@MainActivity, "Write Permission Denied!", Toast.LENGTH_SHORT)
+                    .show()
+                // kill app if denied
+                //this.finish()
+                Log.d(TAG, "onRequestPermissionsResult code finishAndRemoveTask...")
+                finishAndRemoveTask()
+            }
+        }
+    }
 }
