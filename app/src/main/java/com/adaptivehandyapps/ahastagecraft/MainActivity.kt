@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // request permissions
+        // TODO: request permissions prior to each access (e.g. Gallery)
         checkPermissionForImage()
     }
 
@@ -74,15 +74,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissionForImage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if ((checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-//                && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-//            ) {
-//                val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-//                val permissionCoarse = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//
-//                requestPermissions(permission, PERMISSION_CODE_READ) // GIVE AN INTEGER VALUE FOR PERMISSION_CODE_READ LIKE 1001
-//                requestPermissions(permissionCoarse, PERMISSION_CODE_WRITE) // GIVE AN INTEGER VALUE FOR PERMISSION_CODE_WRITE LIKE 1002
-//            }
             // if READ or WRITE permissions denied, request WRITE as it will bring along READ
             if ((checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) ||
                 (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)){
@@ -97,17 +88,6 @@ class MainActivity : AppCompatActivity() {
                                             permissions: Array<String>, grantResults: IntArray) {
         Log.d(TAG, "onRequestPermissionsResult code " + requestCode)
         when (requestCode) {
-//            PERMISSION_CODE_READ -> if (grantResults.size > 0
-//                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-//            ) {
-//                Toast.makeText(this@MainActivity, "Read Permission Granted!", Toast.LENGTH_SHORT)
-//                    .show()
-//            } else {
-//                Toast.makeText(this@MainActivity, "Read Permission Denied!", Toast.LENGTH_SHORT)
-//                    .show()
-//                // kill app if denied
-//                this.finish()
-//            }
             PERMISSION_CODE_WRITE -> if (grantResults.size > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
