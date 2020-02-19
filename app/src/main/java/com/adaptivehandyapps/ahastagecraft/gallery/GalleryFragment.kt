@@ -2,14 +2,12 @@ package com.adaptivehandyapps.ahastagecraft.gallery
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.adaptivehandyapps.ahastagecraft.R
@@ -24,10 +22,12 @@ class GalleryFragment : Fragment() {
     // TODO: consolidate image access
     var IMAGE_PICK_CODE = 1000
 
-    private var _imageUri = MutableLiveData<Uri>(null)
-    //var imageUri: Uri? = null
-    val imageUri: LiveData<Uri>
-        get() = _imageUri
+//    //var imageUri: Uri? = null
+//    private var _imageUri = MutableLiveData<Uri>(null)
+//        set(value) {_imageUri = value}
+//
+//    val imageUri: LiveData<Uri>
+//        get() = _imageUri
 
 
     lateinit var imageView: ImageView
@@ -38,10 +38,12 @@ class GalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+
         galleryViewModel =
             ViewModelProvider(this).get(GalleryViewModel::class.java)
-//        ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+        Log.d(TAG,"stageCraft ViewModel " + galleryViewModel)
 
 //        val textView: TextView = root.findViewById(R.id.text_gallery)
 //        galleryViewModel.text.observe(this, Observer {
@@ -70,12 +72,15 @@ class GalleryFragment : Fragment() {
                 // if imageUri is defined
                 resultUri?.let {
                     // retain selection
-                    _imageUri.setValue(resultUri)
-                    Log.d(TAG, "\nimageUri " + imageUri.value)
+                    galleryViewModel._imageUri.setValue(resultUri)
+                    Log.d(TAG, "\nimageUri " + galleryViewModel.imageUri.value)
+//                    _imageUri.setValue(resultUri)
+//                    Log.d(TAG, "\nimageUri " + imageUri.value)
 
                     // display selection
                     Glide.with(this)
-                        .load(_imageUri.value)
+                        .load(galleryViewModel._imageUri.value)
+//                        .load(_imageUri.value)
                         .apply(
                             RequestOptions()
 //                            .override(2048)   // XML android:adjustViewBounds="true" provides override
