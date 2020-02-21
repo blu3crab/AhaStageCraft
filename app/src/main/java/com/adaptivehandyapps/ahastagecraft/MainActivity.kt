@@ -18,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.adaptivehandyapps.ahastagecraft.database.StageDatabase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -60,6 +61,10 @@ class MainActivity : AppCompatActivity() {
 
         // TODO: request permissions prior to each access (e.g. Gallery)
         checkPermissionForImage()
+
+//        //val application = requireNotNull(this.activity).application
+//        val datasource = StageDatabase.getInstance(this.applicationContext).stageDatabaseDao
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

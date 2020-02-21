@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.adaptivehandyapps.ahastagecraft.R
+import com.adaptivehandyapps.ahastagecraft.database.StageDatabase
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -40,6 +41,9 @@ class GalleryFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+
+        val application = requireNotNull(this.activity).application
+        val datasource = StageDatabase.getInstance(application).stageDatabaseDao
 
         galleryViewModel =
             ViewModelProvider(this).get(GalleryViewModel::class.java)
