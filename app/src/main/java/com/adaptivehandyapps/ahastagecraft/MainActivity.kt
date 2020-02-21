@@ -61,10 +61,6 @@ class MainActivity : AppCompatActivity() {
 
         // TODO: request permissions prior to each access (e.g. Gallery)
         checkPermissionForImage()
-
-//        //val application = requireNotNull(this.activity).application
-//        val datasource = StageDatabase.getInstance(this.applicationContext).stageDatabaseDao
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -19,6 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- center in parent (same as image) -->
     <TextView
         android:id="@+id/text_scene_no_image"
         android:layout_width="match_parent"

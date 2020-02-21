@@ -45,10 +45,15 @@ class GalleryFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val datasource = StageDatabase.getInstance(application).stageDatabaseDao
 
-        galleryViewModel =
-            ViewModelProvider(this).get(GalleryViewModel::class.java)
-        Log.d(TAG,"stageCraft ViewModel " + galleryViewModel)
+        val viewModelFactory = GalleryViewModelFactory(datasource, application)
+        // deprecated -> ViewModelProviders.of
+        //galleryViewModel = ViewModelProviders.of(this, viewModelFactory).get(GalleryViewModel::class.java)
+        galleryViewModel = ViewModelProvider(this, viewModelFactory).get(GalleryViewModel::class.java)
 
+//        galleryViewModel =
+//            ViewModelProvider(this).get(GalleryViewModel::class.java)
+//        Log.d(TAG,"stageCraft ViewModel " + galleryViewModel)
+//
 //        val textView: TextView = root.findViewById(R.id.text_gallery)
 //        galleryViewModel.text.observe(this, Observer {
 //            textView.text = it
