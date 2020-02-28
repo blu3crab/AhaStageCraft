@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+//import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.adaptivehandyapps.ahastagecraft.R
 import com.adaptivehandyapps.ahastagecraft.database.StageDatabase
+//import com.adaptivehandyapps.ahastagecraft.databinding.FragmentGalleryBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -41,6 +43,9 @@ class GalleryFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+//        val binding: FragmentGalleryBinding = DataBindingUtil.inflate(
+//            inflater, R.layout.fragment_gallery, container, false
+//        )
 
         val application = requireNotNull(this.activity).application
         val datasource = StageDatabase.getInstance(application).stageDatabaseDao
@@ -49,6 +54,7 @@ class GalleryFragment : Fragment() {
         // deprecated -> ViewModelProviders.of
         //galleryViewModel = ViewModelProviders.of(this, viewModelFactory).get(GalleryViewModel::class.java)
         galleryViewModel = ViewModelProvider(this, viewModelFactory).get(GalleryViewModel::class.java)
+//        galleryViewModel.logAll()
 
 //        galleryViewModel =
 //            ViewModelProvider(this).get(GalleryViewModel::class.java)
@@ -60,9 +66,16 @@ class GalleryFragment : Fragment() {
 //        })
 
         // lateinit imageView
+//        imageView = binding.root.findViewById(R.id.image_gallery)
         imageView = root.findViewById(R.id.image_gallery)
+        galleryViewModel._imageLabel.setValue("...scene label...")
         // launch Gallery intent to select photo
         pickImageFromGallery()
+
+//        binding.setLifecycleOwner(this)
+//        binding.galleryViewModel = galleryViewModel
+//
+//        return binding.root
 
         return root
     }
@@ -83,6 +96,10 @@ class GalleryFragment : Fragment() {
                     // retain selection
                     galleryViewModel._imageUri.setValue(resultUri)
                     Log.d(TAG, "\nimageUri " + galleryViewModel.imageUri.value)
+//                    galleryViewModel.logAll()
+//                    galleryViewModel.updateAndInsert()
+//                    galleryViewModel.logAll()
+
 //                    _imageUri.setValue(resultUri)
 //                    Log.d(TAG, "\nimageUri " + imageUri.value)
 
@@ -97,6 +114,9 @@ class GalleryFragment : Fragment() {
                                 .error(R.drawable.ic_broken_image)
                         )
                         .into(imageView)
+                }
+                if (resultUri == null) {
+                    Log.d(TAG, "\nimageUri NULL...")
                 }
             }
         }
