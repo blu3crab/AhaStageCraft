@@ -2,12 +2,14 @@ package com.adaptivehandyapps.ahastagecraft.gallery
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.net.toUri
 //import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -93,8 +95,12 @@ class GalleryFragment : Fragment() {
                 val resultUri = data?.data
                 // if imageUri is defined
                 resultUri?.let {
+                    // test transforms on URI
+                    val uriString : String = resultUri.toString()
+                    val uriTarget : Uri = uriString.toUri()
                     // retain selection
-                    galleryViewModel._imageUri.setValue(resultUri)
+                    galleryViewModel._imageUri.setValue(uriTarget)
+//                    galleryViewModel._imageUri.setValue(resultUri)
                     Log.d(TAG, "\nimageUri " + galleryViewModel.imageUri.value)
 //                    galleryViewModel.logAll()
 //                    galleryViewModel.updateAndInsert()

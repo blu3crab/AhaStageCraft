@@ -9,7 +9,7 @@ buildscript {
         coroutine_version = '1.0.0'
         version_glide = "4.8.0"
         navigationVersion = '1.0.0-alpha08'
-        gradleVersion = '3.6.0'
+        gradleVersion = '3.6.1'
         dataBindingCompilerVersion = gradleVersion // Always need to be the same.
     }
 
